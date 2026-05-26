@@ -6,8 +6,12 @@ import h5py
 import os
 from functools import partial
 import sys
-sys.path.append('dinov2')
-sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+_SKILL_LEARNING_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+# Insert (not append) the outer dinov2 dir at front of sys.path so that
+# `import dinov2` resolves to the inner package (which has .models / .eval / .utils),
+# not the outer Meta-repo __init__.py that shadows it when cwd contains a `dinov2/` dir.
+sys.path.insert(0, os.path.join(_SKILL_LEARNING_DIR, 'dinov2'))
+sys.path.append(_SKILL_LEARNING_DIR)
 
 from einops import rearrange
 from easydict import EasyDict
@@ -25,18 +29,63 @@ from models.model_utils import safe_cuda
 
 # from utils.video_utils import KaedeVideoWriter
 
-Dataset_Name_List = [
-    "../datasets/libero_spatial/pick_up_the_black_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate_demo",
-    "../datasets/libero_spatial/pick_up_the_black_bowl_next_to_the_ramekin_and_place_it_on_the_plate_demo",
-    "../datasets/libero_spatial/pick_up_the_black_bowl_from_table_center_and_place_it_on_the_plate_demo",
-    "../datasets/libero_spatial/pick_up_the_black_bowl_on_the_cookie_box_and_place_it_on_the_plate_demo",
-    "../datasets/libero_spatial/pick_up_the_black_bowl_in_the_top_drawer_of_the_wooden_cabinet_and_place_it_on_the_plate_demo",
-    "../datasets/libero_spatial/pick_up_the_black_bowl_on_the_ramekin_and_place_it_on_the_plate_demo",
-    "../datasets/libero_spatial/pick_up_the_black_bowl_next_to_the_cookie_box_and_place_it_on_the_plate_demo",
-    "../datasets/libero_spatial/pick_up_the_black_bowl_on_the_stove_and_place_it_on_the_plate_demo",
-    "../datasets/libero_spatial/pick_up_the_black_bowl_next_to_the_plate_and_place_it_on_the_plate_demo",
-    "../datasets/libero_spatial/pick_up_the_black_bowl_on_the_wooden_cabinet_and_place_it_on_the_plate_demo",
-]
+DATASET_TASKS = {
+    "libero_object": [
+        "pick_up_the_alphabet_soup_and_place_it_in_the_basket_demo",
+        "pick_up_the_cream_cheese_and_place_it_in_the_basket_demo",
+        "pick_up_the_salad_dressing_and_place_it_in_the_basket_demo",
+        "pick_up_the_bbq_sauce_and_place_it_in_the_basket_demo",
+        "pick_up_the_ketchup_and_place_it_in_the_basket_demo",
+        "pick_up_the_tomato_sauce_and_place_it_in_the_basket_demo",
+        "pick_up_the_butter_and_place_it_in_the_basket_demo",
+        "pick_up_the_milk_and_place_it_in_the_basket_demo",
+        "pick_up_the_chocolate_pudding_and_place_it_in_the_basket_demo",
+        "pick_up_the_orange_juice_and_place_it_in_the_basket_demo",
+    ],
+    "libero_goal": [
+        "open_the_middle_drawer_of_the_cabinet_demo",
+        "open_the_top_drawer_and_put_the_bowl_inside_demo",
+        "push_the_plate_to_the_front_of_the_stove_demo",
+        "put_the_bowl_on_the_plate_demo",
+        "put_the_bowl_on_the_stove_demo",
+        "put_the_bowl_on_top_of_the_cabinet_demo",
+        "put_the_cream_cheese_in_the_bowl_demo",
+        "put_the_wine_bottle_on_the_rack_demo",
+        "put_the_wine_bottle_on_top_of_the_cabinet_demo",
+        "turn_on_the_stove_demo",
+    ],
+    # Single-task dataset: 1 hdf5 with 50 demos × 333 frames.
+    # No multi-task / lifelong split — used for within-task temporal segmentation only.
+    "robocasa_h50_50ep": [
+        "robocasa_h50_50ep",
+    ],
+    # Robocasa kitchen multi-task aggregate: 1293 demos, ~50 distinct tasks mixed.
+    "robocasa_h50_all": [
+        "robocasa_h50_all",
+    ],
+    # RoboCasa365 v1.0 target/atomic-seen split: 18 atomic kitchen tasks,
+    # ~500 demos per task. Converted by scripts/convert_robocasa365_atomic_seen.py.
+    "robocasa365_atomic_seen": [
+        "CloseBlenderLid",
+        "CloseFridge",
+        "CloseToasterOvenDoor",
+        "CoffeeSetupMug",
+        "NavigateKitchen",
+        "OpenCabinet",
+        "OpenDrawer",
+        "OpenStandMixerHead",
+        "PickPlaceCounterToCabinet",
+        "PickPlaceCounterToStove",
+        "PickPlaceDrawerToCounter",
+        "PickPlaceSinkToCounter",
+        "PickPlaceToasterToCounter",
+        "SlideDishwasherRack",
+        "TurnOffStove",
+        "TurnOnElectricKettle",
+        "TurnOnMicrowave",
+        "TurnOnSinkFaucet",
+    ],
+}
 
 class DinoV2ImageProcessor(object):
     def __init__(self, args=None):
@@ -160,13 +209,23 @@ if __name__ == "__main__":
         default="dinov2_agentview_eye_in_hand",
     )
     parser.add_argument(
-        '--batch-size', 
-        type=int, 
+        '--batch-size',
+        type=int,
         default=100
+    )
+    parser.add_argument(
+        '--dataset-category',
+        type=str,
+        default='libero_object',
+        choices=list(DATASET_TASKS.keys()),
+        help='Which dataset directory under ../datasets to process.',
     )
     args = parser.parse_args()
     modality_str = args.modality_str
     feature_dim = args.feature_dim
+    Dataset_Name_List = [
+        f"../datasets/{args.dataset_category}/{t}" for t in DATASET_TASKS[args.dataset_category]
+    ]
     dinov2 = DinoV2ImageProcessor()
 
     for dataset_name in Dataset_Name_List:

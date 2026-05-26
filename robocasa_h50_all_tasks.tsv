@@ -1,0 +1,243 @@
+task_index	n_episodes	task_instruction
+0	54	close the cabinet doors
+1	25	close the left drawer
+2	29	close the right drawer
+3	42	close the microwave door
+4	12	close the cabinet door
+5	54	press the button on the coffee machine to serve coffee
+6	54	pick the mug from under the coffee machine dispenser and place it on the counter
+7	54	pick the mug from the counter and place it under the coffee machine dispenser
+8	53	open the cabinet doors
+9	26	open the right drawer
+10	28	open the left drawer
+11	36	open the cabinet door
+12	18	open the microwave door
+13	2	pick the hot dog from the cabinet and place it on the counter
+14	2	pick the bar from the cabinet and place it on the counter
+15	4	pick the banana from the cabinet and place it on the counter
+16	4	pick the onion from the cabinet and place it on the counter
+17	1	pick the jug from the cabinet and place it on the counter
+18	1	pick the bread from the cabinet and place it on the counter
+19	2	pick the tomato from the cabinet and place it on the counter
+20	1	pick the fish from the cabinet and place it on the counter
+21	2	pick the bell pepper from the cabinet and place it on the counter
+22	2	pick the avocado from the cabinet and place it on the counter
+23	2	pick the steak from the cabinet and place it on the counter
+24	2	pick the yogurt from the cabinet and place it on the counter
+25	1	pick the mango from the cabinet and place it on the counter
+26	2	pick the ketchup from the cabinet and place it on the counter
+27	1	pick the condiment bottle from the cabinet and place it on the counter
+28	2	pick the cucumber from the cabinet and place it on the counter
+29	2	pick the canned food from the cabinet and place it on the counter
+30	2	pick the carrot from the cabinet and place it on the counter
+31	2	pick the bar soap from the cabinet and place it on the counter
+32	1	pick the water bottle from the cabinet and place it on the counter
+33	1	pick the ladle from the cabinet and place it on the counter
+34	1	pick the coffee cup from the cabinet and place it on the counter
+35	1	pick the lime from the cabinet and place it on the counter
+36	1	pick the garlic from the cabinet and place it on the counter
+37	2	pick the jam from the cabinet and place it on the counter
+38	2	pick the broccoli from the cabinet and place it on the counter
+39	1	pick the croissant from the cabinet and place it on the counter
+40	1	pick the teapot from the cabinet and place it on the counter
+41	1	pick the boxed food from the cabinet and place it on the counter
+42	1	pick the apple from the cabinet and place it on the counter
+43	1	pick the egg from the cabinet and place it on the counter
+44	1	pick the boxed drink from the cabinet and place it on the counter
+45	1	pick the kiwi from the cabinet and place it on the counter
+46	1	pick the mushroom from the cabinet and place it on the counter
+47	1	pick the cake from the counter and place it in the cabinet
+48	1	pick the hot dog from the counter and place it in the cabinet
+49	1	pick the carrot from the counter and place it in the cabinet
+50	2	pick the avocado from the counter and place it in the cabinet
+51	1	pick the mushroom from the counter and place it in the cabinet
+52	4	pick the shaker from the counter and place it in the cabinet
+53	1	pick the orange from the counter and place it in the cabinet
+54	2	pick the squash from the counter and place it in the cabinet
+55	2	pick the water bottle from the counter and place it in the cabinet
+56	1	pick the sponge from the counter and place it in the cabinet
+57	2	pick the soap dispenser from the counter and place it in the cabinet
+58	1	pick the egg from the counter and place it in the cabinet
+59	2	pick the tomato from the counter and place it in the cabinet
+60	2	pick the cheese from the counter and place it in the cabinet
+61	1	pick the jam from the counter and place it in the cabinet
+62	1	pick the mug from the counter and place it in the cabinet
+63	1	pick the kettle non electric from the counter and place it in the cabinet
+64	1	pick the sweet potato from the counter and place it in the cabinet
+65	1	pick the jug from the counter and place it in the cabinet
+66	1	pick the bowl from the counter and place it in the cabinet
+67	2	pick the canned food from the counter and place it in the cabinet
+68	1	pick the cup from the counter and place it in the cabinet
+69	1	pick the cupcake from the counter and place it in the cabinet
+70	2	pick the kettle electric from the counter and place it in the cabinet
+71	2	pick the mango from the counter and place it in the cabinet
+72	1	pick the yogurt from the counter and place it in the cabinet
+73	1	pick the potato from the counter and place it in the cabinet
+74	1	pick the broccoli from the counter and place it in the cabinet
+75	1	pick the spray from the counter and place it in the cabinet
+76	1	pick the can from the counter and place it in the cabinet
+77	1	pick the ketchup from the counter and place it in the cabinet
+78	1	pick the steak from the counter and place it in the cabinet
+79	1	pick the bell pepper from the counter and place it in the cabinet
+80	2	pick the beer from the counter and place it in the cabinet
+81	2	pick the lemon from the counter and place it in the cabinet
+82	1	pick the bar soap from the counter and place it in the cabinet
+83	1	pick the baguette from the counter and place it in the cabinet
+84	1	pick the candle from the counter and place it in the cabinet
+85	1	pick the onion from the counter and place it in the cabinet
+86	1	pick the liquor from the counter and place it in the cabinet
+87	6	pick the corn from the counter and place it in the microwave
+88	6	pick the cheese from the counter and place it in the microwave
+89	3	pick the fish from the counter and place it in the microwave
+90	1	pick the steak from the counter and place it in the microwave
+91	3	pick the onion from the counter and place it in the microwave
+92	4	pick the tomato from the counter and place it in the microwave
+93	2	pick the mushroom from the counter and place it in the microwave
+94	5	pick the potato from the counter and place it in the microwave
+95	2	pick the squash from the counter and place it in the microwave
+96	7	pick the carrot from the counter and place it in the microwave
+97	1	pick the garlic from the counter and place it in the microwave
+98	3	pick the sweet potato from the counter and place it in the microwave
+99	2	pick the hot dog from the counter and place it in the microwave
+100	3	pick the broccoli from the counter and place it in the microwave
+101	2	pick the eggplant from the counter and place it in the microwave
+102	3	pick the bell pepper from the counter and place it in the microwave
+103	1	pick the egg from the counter and place it in the microwave
+104	5	pick the apple from the counter and place it in the sink
+105	2	pick the jam from the counter and place it in the sink
+106	4	pick the tangerine from the counter and place it in the sink
+107	3	pick the carrot from the counter and place it in the sink
+108	4	pick the rolling pin from the counter and place it in the sink
+109	1	pick the lemon from the counter and place it in the sink
+110	1	pick the avocado from the counter and place it in the sink
+111	1	pick the teapot from the counter and place it in the sink
+112	2	pick the corn from the counter and place it in the sink
+113	1	pick the cheese from the counter and place it in the sink
+114	1	pick the mushroom from the counter and place it in the sink
+115	1	pick the wine from the counter and place it in the sink
+116	1	pick the potato from the counter and place it in the sink
+117	3	pick the bar soap from the counter and place it in the sink
+118	1	pick the garlic from the counter and place it in the sink
+119	3	pick the can from the counter and place it in the sink
+120	1	pick the kiwi from the counter and place it in the sink
+121	1	pick the pear from the counter and place it in the sink
+122	3	pick the soap dispenser from the counter and place it in the sink
+123	2	pick the sponge from the counter and place it in the sink
+124	2	pick the bottled drink from the counter and place it in the sink
+125	1	pick the egg from the counter and place it in the sink
+126	1	pick the fish from the counter and place it in the sink
+127	1	pick the orange from the counter and place it in the sink
+128	1	pick the canned food from the counter and place it in the sink
+129	1	pick the water bottle from the counter and place it in the sink
+130	1	pick the boxed drink from the counter and place it in the sink
+131	1	pick the milk from the counter and place it in the sink
+132	1	pick the condiment bottle from the counter and place it in the sink
+133	1	pick the kettle non electric from the counter and place it in the sink
+134	1	pick the eggplant from the counter and place it in the sink
+135	1	pick the cup from the counter and place it in the sink
+136	4	pick the potato from the plate and place it in the pan
+137	4	pick the lime from the plate and place it in the pan
+138	3	pick the sweet potato from the plate and place it in the pan
+139	3	pick the mango from the plate and place it in the pan
+140	5	pick the cheese from the plate and place it in the pan
+141	1	pick the steak from the plate and place it in the pan
+142	3	pick the apple from the plate and place it in the pan
+143	3	pick the carrot from the plate and place it in the pan
+144	10	pick the corn from the plate and place it in the pan
+145	1	pick the egg from the plate and place it in the pan
+146	2	pick the tomato from the plate and place it in the pan
+147	2	pick the garlic from the plate and place it in the pan
+148	2	pick the onion from the plate and place it in the pan
+149	2	pick the lemon from the plate and place it in the pan
+150	2	pick the bell pepper from the plate and place it in the pan
+151	3	pick the broccoli from the plate and place it in the pan
+152	1	pick the eggplant from the plate and place it in the pan
+153	2	pick the fish from the plate and place it in the pan
+154	5	pick the onion from the microwave and place it on plate located on the counter
+155	5	pick the carrot from the microwave and place it on plate located on the counter
+156	4	pick the egg from the microwave and place it on plate located on the counter
+157	2	pick the tomato from the microwave and place it on plate located on the counter
+158	4	pick the corn from the microwave and place it on plate located on the counter
+159	4	pick the potato from the microwave and place it on plate located on the counter
+160	6	pick the broccoli from the microwave and place it on plate located on the counter
+161	1	pick the bell pepper from the microwave and place it on plate located on the counter
+162	3	pick the eggplant from the microwave and place it on plate located on the counter
+163	2	pick the cheese from the microwave and place it on plate located on the counter
+164	1	pick the mushroom from the microwave and place it on plate located on the counter
+165	2	pick the sweet potato from the microwave and place it on plate located on the counter
+166	2	pick the steak from the microwave and place it on plate located on the counter
+167	3	pick the hot dog from the microwave and place it on plate located on the counter
+168	5	pick the squash from the microwave and place it on plate located on the counter
+169	3	pick the fish from the microwave and place it on plate located on the counter
+170	2	pick the garlic from the microwave and place it on plate located on the counter
+171	5	pick the tomato from the sink and place it on the plate located on the counter
+172	3	pick the garlic from the sink and place it on the plate located on the counter
+173	3	pick the onion from the sink and place it on the plate located on the counter
+174	1	pick the avocado from the sink and place it on the plate located on the counter
+175	2	pick the mushroom from the sink and place it on the plate located on the counter
+176	2	pick the fish from the sink and place it on the plate located on the counter
+177	1	pick the kiwi from the sink and place it on the plate located on the counter
+178	3	pick the apple from the sink and place it on the plate located on the counter
+179	2	pick the banana from the sink and place it on the plate located on the counter
+180	2	pick the potato from the sink and place it on the plate located on the counter
+181	1	pick the bell pepper from the sink and place it on the plate located on the counter
+182	2	pick the broccoli from the sink and place it on the plate located on the counter
+183	3	pick the pear from the sink and place it on the plate located on the counter
+184	2	pick the milk from the sink and place it on the plate located on the counter
+185	1	pick the corn from the sink and place it on the plate located on the counter
+186	4	pick the carrot from the sink and place it on the plate located on the counter
+187	3	pick the yogurt from the sink and place it on the plate located on the counter
+188	1	pick the tangerine from the sink and place it on the plate located on the counter
+189	3	pick the lime from the sink and place it on the plate located on the counter
+190	1	pick the lemon from the sink and place it on the plate located on the counter
+191	1	pick the squash from the sink and place it on the plate located on the counter
+192	1	pick the steak from the sink and place it on the plate located on the counter
+193	1	pick the egg from the sink and place it on the plate located on the counter
+194	2	pick the mango from the sink and place it on the plate located on the counter
+195	1	pick the sweet potato from the sink and place it on the plate located on the counter
+196	2	pick the orange from the sink and place it on the plate located on the counter
+197	1	pick the peach from the sink and place it on the plate located on the counter
+198	4	pick the steak from the pan and place it on the plate
+199	3	pick the sweet potato from the pan and place it on the plate
+200	2	pick the eggplant from the pan and place it in the bowl
+201	1	pick the lime from the pan and place it on the plate
+202	3	pick the cheese from the pan and place it on the plate
+203	2	pick the lemon from the pan and place it on the plate
+204	3	pick the potato from the pan and place it on the plate
+205	2	pick the garlic from the pan and place it in the bowl
+206	5	pick the squash from the pan and place it on the plate
+207	3	pick the mango from the pan and place it on the plate
+208	3	pick the mushroom from the pan and place it on the plate
+209	3	pick the tomato from the pan and place it on the plate
+210	1	pick the steak from the pan and place it in the bowl
+211	2	pick the apple from the pan and place it in the bowl
+212	2	pick the egg from the pan and place it on the plate
+213	2	pick the lemon from the pan and place it in the bowl
+214	1	pick the egg from the pan and place it in the bowl
+215	1	pick the onion from the pan and place it on the plate
+216	1	pick the tomato from the pan and place it in the bowl
+217	2	pick the mango from the pan and place it in the bowl
+218	1	pick the broccoli from the pan and place it on the plate
+219	1	pick the fish from the pan and place it on the plate
+220	2	pick the carrot from the pan and place it on the plate
+221	3	pick the lime from the pan and place it in the bowl
+222	1	pick the bell pepper from the pan and place it in the bowl
+223	54	press the stop button on the microwave
+224	54	turn off the sink faucet
+225	17	turn off the front right burner of the stove
+226	11	turn off the front left burner of the stove
+227	6	turn off the rear left burner of the stove
+228	3	turn off the rear center burner of the stove
+229	12	turn off the rear right burner of the stove
+230	5	turn off the center burner of the stove
+231	54	press the start button on the microwave
+232	54	turn on the sink faucet
+233	5	turn on the front left burner of the stove
+234	11	turn on the rear left burner of the stove
+235	12	turn on the front right burner of the stove
+236	12	turn on the rear right burner of the stove
+237	8	turn on the rear center burner of the stove
+238	2	turn on the center burner of the stove
+239	3	turn on the front center burner of the stove
+240	35	turn the sink spout to the right
+241	19	turn the sink spout to the left

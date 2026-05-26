@@ -31,6 +31,8 @@ services:
     volumes:
       # 소스 코드 마운트 (실시간 개발용)
       - ${HOME}/code/lotus_test:/home/iw/lotus_test
+      # RoboCasa365 원본 LeRobot 데이터 (convert_robocasa365_atomic_seen.py 의 SRC_ROOT)
+      - ${HOME}/code/robocasa:/home/iw/robocasa:ro
       # LIBERO / 데이터셋 캐시 (컨테이너 진입 후 ~/LIBERO 등에 clone 하면 호스트에 보존됨)
       - ${HOME}/.cache/huggingface:/home/iw/.cache/huggingface
       - ${HOME}/.cache/torch:/home/iw/.cache/torch

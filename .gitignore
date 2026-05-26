@@ -18,7 +18,16 @@ logs/
 *.mp4
 libero.egg-info/
 lotus.egg-info/
+
+# generated viewers (large; viewer_web is its own git repo pushed to GitHub Pages)
+viewer/
+viewer_web/
 .vscode/
 
 ## random
 log.txt
+*.log
+# vendored dinov2 generates this on import
+lotus/skill_learning/config.yaml
+# converted task-name dump (large, regenerable)
+robocasa_h50_all_tasks.txt

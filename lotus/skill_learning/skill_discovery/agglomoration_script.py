@@ -22,18 +22,62 @@ from PIL import Image
 
 DEL_COST = INS_COST = 1.0
 SUB_COST = 1.0
-dataset_name_list = [
-    "libero_object/pick_up_the_alphabet_soup_and_place_it_in_the_basket_demo",
-    "libero_object/pick_up_the_cream_cheese_and_place_it_in_the_basket_demo",
-    "libero_object/pick_up_the_salad_dressing_and_place_it_in_the_basket_demo",
-    "libero_object/pick_up_the_bbq_sauce_and_place_it_in_the_basket_demo",
-    "libero_object/pick_up_the_ketchup_and_place_it_in_the_basket_demo",
-    "libero_object/pick_up_the_tomato_sauce_and_place_it_in_the_basket_demo",
-    "libero_object/pick_up_the_butter_and_place_it_in_the_basket_demo",
-    "libero_object/pick_up_the_milk_and_place_it_in_the_basket_demo",
-    "libero_object/pick_up_the_chocolate_pudding_and_place_it_in_the_basket_demo",
-    "libero_object/pick_up_the_orange_juice_and_place_it_in_the_basket_demo",
-]
+DATASET_TASKS = {
+    "libero_object": [
+        "pick_up_the_alphabet_soup_and_place_it_in_the_basket_demo",
+        "pick_up_the_cream_cheese_and_place_it_in_the_basket_demo",
+        "pick_up_the_salad_dressing_and_place_it_in_the_basket_demo",
+        "pick_up_the_bbq_sauce_and_place_it_in_the_basket_demo",
+        "pick_up_the_ketchup_and_place_it_in_the_basket_demo",
+        "pick_up_the_tomato_sauce_and_place_it_in_the_basket_demo",
+        "pick_up_the_butter_and_place_it_in_the_basket_demo",
+        "pick_up_the_milk_and_place_it_in_the_basket_demo",
+        "pick_up_the_chocolate_pudding_and_place_it_in_the_basket_demo",
+        "pick_up_the_orange_juice_and_place_it_in_the_basket_demo",
+    ],
+    "libero_goal": [
+        "open_the_middle_drawer_of_the_cabinet_demo",
+        "open_the_top_drawer_and_put_the_bowl_inside_demo",
+        "push_the_plate_to_the_front_of_the_stove_demo",
+        "put_the_bowl_on_the_plate_demo",
+        "put_the_bowl_on_the_stove_demo",
+        "put_the_bowl_on_top_of_the_cabinet_demo",
+        "put_the_cream_cheese_in_the_bowl_demo",
+        "put_the_wine_bottle_on_the_rack_demo",
+        "put_the_wine_bottle_on_top_of_the_cabinet_demo",
+        "turn_on_the_stove_demo",
+    ],
+    "robocasa_h50_50ep": [
+        "robocasa_h50_50ep",
+    ],
+    "robocasa_h50_all": [
+        "robocasa_h50_all",
+    ],
+    "robocasa365_atomic_seen": [
+        "CloseBlenderLid",
+        "CloseFridge",
+        "CloseToasterOvenDoor",
+        "CoffeeSetupMug",
+        "NavigateKitchen",
+        "OpenCabinet",
+        "OpenDrawer",
+        "OpenStandMixerHead",
+        "PickPlaceCounterToCabinet",
+        "PickPlaceCounterToStove",
+        "PickPlaceDrawerToCounter",
+        "PickPlaceSinkToCounter",
+        "PickPlaceToasterToCounter",
+        "SlideDishwasherRack",
+        "TurnOffStove",
+        "TurnOnElectricKettle",
+        "TurnOnMicrowave",
+        "TurnOnSinkFaucet",
+    ],
+}
+
+# Defaults — may be overridden in main() from cfg.dataset_category.
+_DEFAULT_CATEGORY = "libero_object"
+dataset_name_list = [f"{_DEFAULT_CATEGORY}/{t}" for t in DATASET_TASKS[_DEFAULT_CATEGORY]]
 base_dataset_name_list = dataset_name_list[0:6]
 lifelong_dataset_name_list = dataset_name_list[6:10]
 
@@ -181,17 +225,31 @@ def agglomoration_func(cfg, modality_str, dataset_name_list):
 
 
     K = cfg.agglomoration.K
-    # range_n_clusters = list(range(8, 17)) 
-    # silhouette_scores = []
-    # for n_clusters in range_n_clusters:
-    #     clustering_model = cluster.SpectralClustering(n_clusters=n_clusters,
-    #                                                 assign_labels="discretize",
-    #                                                 affinity=cfg.agglomoration.affinity)
-    #     cluster_labels = clustering_model.fit_predict(X)
-    #     silhouette_avg = metrics.silhouette_score(X, cluster_labels)
-    #     silhouette_scores.append(silhouette_avg)
-    # optimal_k = range_n_clusters[silhouette_scores.index(max(silhouette_scores))]
-    # print(f"Optimal number of clusters (K) is: {optimal_k}")
+    # Paper Sec IV-A: choose K1 by sweeping silhouette score.
+    # Activated when cfg.agglomoration.K <= 0 (sentinel). Otherwise the
+    # config K is used as before.
+    if K is None or K <= 0:
+        k_low = int(getattr(cfg.agglomoration, "k_search_low", 2))
+        k_high = int(getattr(cfg.agglomoration, "k_search_high", 12))
+        range_n_clusters = list(range(k_low, k_high))
+        silhouette_scores = []
+        print(f"[silhouette] sweeping K in {range_n_clusters} on {len(X)} segments")
+        for n_clusters in range_n_clusters:
+            if cfg.agglomoration.affinity != "kmeans":
+                clustering_model = cluster.SpectralClustering(
+                    n_clusters=n_clusters,
+                    assign_labels="discretize",
+                    affinity=cfg.agglomoration.affinity,
+                )
+            else:
+                clustering_model = cluster.KMeans(n_clusters=n_clusters, random_state=0)
+            cluster_labels = clustering_model.fit_predict(X)
+            silhouette_avg = metrics.silhouette_score(X, cluster_labels)
+            silhouette_scores.append(silhouette_avg)
+            print(f"[silhouette]  K={n_clusters:2d}  score={silhouette_avg:+.4f}")
+        K = range_n_clusters[int(np.argmax(silhouette_scores))]
+        print(f"[silhouette] selected K* = {K}  (max score = {max(silhouette_scores):+.4f})")
+        cfg.agglomoration.K = K
 
     colors = ['r', 'b', 'g', 'y', 'k', 'C0', 'C1', 'C2', 'magenta', 'lightpink', 'deepskyblue', 'lawngreen'] + list(mcolors.CSS4_COLORS.values())
 
@@ -1196,13 +1254,25 @@ def add_new_data(cfg, modality_str, old_ep_subtasks_seq, X, old_dataset_name_lis
 
 @hydra.main(config_path="../../configs/skill_learning", config_name="default", version_base=None)
 def main(hydra_cfg):
-    
+
     yaml_config = OmegaConf.to_yaml(hydra_cfg, resolve=True)
     cfg = EasyDict(yaml.safe_load(yaml_config))
-    
+
     print(f"Footprint: {cfg.agglomoration.footprint}, Dist: {cfg.agglomoration.dist}, Segment: {cfg.agglomoration.segment_footprint}, K: {cfg.agglomoration.K}, Affinity: {cfg.agglomoration.affinity}")
 
-    modality_str =cfg.modality_str
+    modality_str = cfg.modality_str
+
+    category = getattr(cfg, "dataset_category", _DEFAULT_CATEGORY)
+    print(f"dataset_category: {category}")
+    global dataset_name_list, base_dataset_name_list, lifelong_dataset_name_list
+    dataset_name_list = [f"{category}/{t}" for t in DATASET_TASKS[category]]
+    # For single-task datasets (no lifelong split) all tasks go into base.
+    base_split = getattr(cfg, "base_split", 6)
+    base_dataset_name_list = dataset_name_list[0:base_split]
+    lifelong_dataset_name_list = dataset_name_list[base_split:]
+    if not base_dataset_name_list:
+        base_dataset_name_list = dataset_name_list
+        lifelong_dataset_name_list = []
 
     agglomoration_func(cfg, modality_str, base_dataset_name_list)
 

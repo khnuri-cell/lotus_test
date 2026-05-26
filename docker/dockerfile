@@ -70,9 +70,18 @@ RUN python3.9 -m pip install \
         torchaudio==2.0.2+cu118 \
         --index-url https://download.pytorch.org/whl/cu118
 
+# egl_probe (robosuite 의존성) 는 빌드 시 cmake 를 호출하는데, pip 의 PEP 517 격리 빌드 환경에서
+# pip 의 cmake wrapper 가 자신의 모듈을 못 찾아서 실패한다.
+# → 메인 env 에 cmake 모듈을 깔고, egl_probe 를 --no-build-isolation 으로 별도 설치해
+#   메인 env 의 cmake 모듈을 그대로 쓰게 한다.
+RUN python3.9 -m pip install cmake==3.27.7 setuptools wheel \
+    && python3.9 -m pip install --no-build-isolation egl_probe
+
 # LOTUS requirements.txt 내용을 그대로 반영
 # (requirements.txt 파일 자체는 빌드 컨텍스트에 없으므로 인라인으로 명시)
 RUN python3.9 -m pip install \
+        mujoco==2.3.7 \
+        robosuite==1.4.1 \
         hydra-core==1.2.0 \
         numpy==1.22.4 \
         wandb==0.13.1 \
@@ -82,7 +91,6 @@ RUN python3.9 -m pip install \
         robomimic==0.2.0 \
         einops==0.4.1 \
         thop==0.1.1-2209072238 \
-        robosuite \
         bddl==1.0.1 \
         future==0.18.2 \
         matplotlib==3.5.3 \
@@ -94,7 +102,13 @@ RUN python3.9 -m pip install \
         fvcore \
         iopath \
         submitit \
-        nvitop
+        nvitop \
+        # RoboCasa365 LeRobot v2.1 / DAVIAN-Robotics/robocasa-H50 LeRobot v3.0
+        # 모두 읽으려면 lerobot >= 0.3 필요. scripts/lerobot_to_libero.py 와
+        # scripts/convert_robocasa365_atomic_seen.py 가 사용.
+        lerobot \
+        pandas \
+        pyarrow
 
 # ---- non-root 사용자 생성 (호스트 uid/gid 에 맞춤) ----
 ARG USERNAME=iw

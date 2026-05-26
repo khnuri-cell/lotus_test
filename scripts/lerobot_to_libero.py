@@ -118,13 +118,27 @@ def to_uint8_hwc(img_tensor: torch.Tensor, target_size: int | None) -> np.ndarra
 
 
 def _episode_bounds(ds: LeRobotDataset, ep_idx: int) -> tuple[int, int]:
-    ep = ds.meta.episodes[ep_idx]
-    # Values may be list[int] (when loaded from disk) or int. Normalize.
+    # v3.0 keeps bounds in meta.episodes[i], v2.1 keeps them in
+    # ds.episode_data_index (from/to tensors). Try v3 keys first, fall back.
     def _scalar(x):
+        if hasattr(x, "tolist"):
+            x = x.tolist()
         if isinstance(x, (list, tuple)):
             return int(x[0])
         return int(x)
-    return _scalar(ep["dataset_from_index"]), _scalar(ep["dataset_to_index"])
+
+    ep = ds.meta.episodes[ep_idx]
+    if isinstance(ep, dict) and "dataset_from_index" in ep:
+        return _scalar(ep["dataset_from_index"]), _scalar(ep["dataset_to_index"])
+
+    # v2.1 fallback
+    if hasattr(ds, "episode_data_index"):
+        idx = ds.episode_data_index
+        return _scalar(idx["from"][ep_idx]), _scalar(idx["to"][ep_idx])
+
+    raise RuntimeError(
+        f"cannot determine episode bounds for {ep_idx}: meta.episodes={ep!r}"
+    )
 
 
 def collect_episode(
