@@ -34,7 +34,7 @@ from sklearn.metrics import (silhouette_score, davies_bouldin_score,
                              calinski_harabasz_score, normalized_mutual_info_score,
                              adjusted_rand_score, homogeneity_score, completeness_score)
 
-ROOT = "/home/iw/lotus_test/lotus/skill_learning/results"
+ROOT = "/home/nuri/lotus_test/lotus/skill_learning/results"
 RUNS = {
     "libero_object": f"{ROOT}/dinov2_libero_object_image_only_10",
     "libero_goal":   f"{ROOT}/dinov2_libero_goal_image_only_10",
@@ -109,7 +109,11 @@ def metrics(X, labels, task_ids):
 def main():
     rows = []
     for name, d in RUNS.items():
-        with h5py.File(f"{d}/skill_data/saved_feature_data.hdf5", "r") as f:
+        fpath = f"{d}/skill_data/saved_feature_data.hdf5"
+        if not os.path.exists(fpath):
+            print(f"[skip] {name}: {fpath} not found")
+            continue
+        with h5py.File(fpath, "r") as f:
             X = f["embeddings"][()].astype(np.float64)
             lotus = f["cluster_labels"][()].astype(int)
             task = f["task_ids"][()].astype(int)

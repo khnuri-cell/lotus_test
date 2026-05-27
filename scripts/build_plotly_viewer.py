@@ -46,6 +46,26 @@ import cv2
 import h5py
 import numpy as np
 from sklearn.manifold import TSNE
+from sklearn.cluster import AgglomerativeClustering
+
+
+def relabel_segments(segs: dict, method: str) -> dict:
+    """Optionally replace the saved (LOTUS) cluster labels with another
+    skill-discovery method's clustering, computed on the SAME DINOv2
+    embeddings at the SAME number of clusters K. Lets the explorer be
+    colored by e.g. BUDS instead of LOTUS. 'lotus' = keep saved labels."""
+    if method == "lotus":
+        return segs
+    X = segs["embeddings"].astype(np.float64)
+    Xn = X / (np.linalg.norm(X, axis=1, keepdims=True) + 1e-8)
+    K = int(segs["cluster_labels"].max()) + 1
+    if method == "buds":
+        labels = AgglomerativeClustering(n_clusters=K, linkage="ward").fit_predict(Xn)
+    else:
+        raise ValueError(f"unknown clustering method: {method}")
+    segs = dict(segs)
+    segs["cluster_labels"] = labels.astype(segs["cluster_labels"].dtype)
+    return segs
 
 
 # Same registry as wandb_skill_explorer.py
@@ -425,9 +445,10 @@ applyFilters();
 def build_dataset(name: str, cfg: dict, out_root: Path, image_size: int,
                   big_image_size: int, frames_per_grid: int,
                   include_video: bool, video_image_size: int, video_every: int,
-                  fps: int):
-    print(f"\n=== {name} ===")
+                  fps: int, clustering: str = "lotus"):
+    print(f"\n=== {name}  (clustering={clustering}) ===")
     segs = load_segments(cfg["exp_dir"])
+    segs = relabel_segments(segs, clustering)
     task_names = list_task_files(cfg["exp_dir"], cfg["category"])
     task_shorts = [short_task_name(t) for t in task_names]
     n = len(segs["embeddings"])
@@ -511,10 +532,14 @@ def build_dataset(name: str, cfg: dict, out_root: Path, image_size: int,
             print(f"    {i+1}/{n}  {rate:.1f} seg/s  eta={eta:.0f}s  failed={failed}")
 
     # Render HTML
-    title = f"{name} — skill explorer"
+    method_label = {"lotus": "LOTUS spectral",
+                    "buds": "BUDS agglomerative (Ward)"}.get(clustering, clustering)
+    method_short = {"lotus": "LOTUS", "buds": "BUDS"}.get(clustering, clustering.upper())
+    title = f"{name} — {method_short} skill explorer"
     subtitle = (f"{n} segments · {len(task_names)} tasks · K={K} "
-                f"(spectral clustering on DINOv2-1536 segment features, "
-                f"t-SNE projection).")
+                f"({method_label} clustering on DINOv2-1536 segment features"
+                + (", LOTUS segmentation" if clustering != "lotus" else "")
+                + ", t-SNE projection).")
     html = (HTML_TEMPLATE
             .replace("__TITLE__", title)
             .replace("__SUBTITLE__", subtitle)
@@ -531,7 +556,8 @@ def build_dataset(name: str, cfg: dict, out_root: Path, image_size: int,
             "subtitle": subtitle}
 
 
-def write_index_page(out_root: Path, summaries: list[dict]):
+def write_index_page(out_root: Path, summaries: list[dict], clustering: str = "lotus"):
+    method_short = {"lotus": "LOTUS", "buds": "BUDS"}.get(clustering, clustering.upper())
     rows = []
     for s in summaries:
         rows.append(
@@ -540,13 +566,13 @@ def write_index_page(out_root: Path, summaries: list[dict]):
         )
     html = (
         "<!doctype html><html><head><meta charset='utf-8' />"
-        "<title>LOTUS skill explorer</title>"
+        f"<title>{method_short} skill explorer</title>"
         "<style>body{font-family:-apple-system,Segoe UI,sans-serif;"
         "max-width:720px;margin:24px auto;padding:0 16px;color:#222;}"
         "h1{margin:0 0 16px}li{margin:6px 0;font-size:15px}"
         "a{color:#1f6fb0;text-decoration:none}a:hover{text-decoration:underline}"
         "p{color:#666}</style></head><body>"
-        "<h1>LOTUS skill discovery — scatter explorers</h1>"
+        f"<h1>{method_short} skill discovery — scatter explorers</h1>"
         "<p>Click a dataset to open its interactive t-SNE scatter. "
         "Hover a point for a thumbnail preview; click for the full "
         "frame grid + segment video.</p><ul>"
@@ -570,6 +596,8 @@ def main():
     ap.add_argument("--video-size", type=int, default=160)
     ap.add_argument("--video-every", type=int, default=4)
     ap.add_argument("--video-fps", type=int, default=10)
+    ap.add_argument("--clustering", choices=["lotus", "buds"], default="lotus",
+                    help="Color points by saved LOTUS labels or recomputed BUDS (Ward) at same K.")
     args = ap.parse_args()
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
@@ -591,10 +619,11 @@ def main():
             video_image_size=args.video_size,
             video_every=args.video_every,
             fps=args.video_fps,
+            clustering=args.clustering,
         )
         summaries.append(s)
 
-    write_index_page(args.out_dir, summaries)
+    write_index_page(args.out_dir, summaries, clustering=args.clustering)
     print("done.")
 
 
